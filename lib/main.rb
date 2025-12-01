@@ -2,10 +2,14 @@
 
 require_relative "fcm/version"
 require "debug"
+require "segment"
 module Fcm
   def self.run
     file = ARGV.last
-    read_file(file) if file && file.split(".").last == "txt"
+    data = read_file(file) if file && file.split(".").last == "txt"
+    unless data.nil? || data.empty?
+      create_objects(data)
+    end
   end
 
   def self.read_file(file)
@@ -13,8 +17,15 @@ module Fcm
     filedata.select { |l| l.include?("SEGMENT") }
   end
 
-  class Error < StandardError; end
-  # Your code goes here...
+  def self.create_objects(data)
+    @segments = []
+    data.each do |line|
+      @segments << Segment.new(line)
+    rescue Error => e
+      puts "Error with line: #{e}"
+    end
+    @segments
+  end
 end
 
 Fcm.run
