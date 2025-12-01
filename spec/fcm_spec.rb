@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "debug"
-
+# rubocop:disable Metrics/BlockLength
 RSpec.describe Fcm do
   it "has a version number" do
     expect(Fcm::VERSION).not_to be nil
@@ -46,3 +46,4 @@ RSpec.describe Fcm do
     expect(Fcm.read_file("spec/empty_data.txt")).to eq(data)
   end
 end
+# rubocop:enable Metrics/BlockLength
