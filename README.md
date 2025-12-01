@@ -8,6 +8,28 @@ BASED=SVQ bundle exec ruby main.rb input.txt
 ```
 with a simple input and output.
 
+I decided to create a type of object, Segment, to save the information of every line with information.
+I see two types of data, some are accomodations and other tickets for transport.
+But I prefer to begin with a one type of object and if I needed in the future split to two,  instead of create two different objects in this step.
+I am using the number of words in the line to identify the data, then in normals conditions of work I would ask if we are sure about this.
+Because if, for example, we have an hour to leave an accomodation, example:
+```
+"SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00"
+```
+with the current code will raise an error
+
+## Doubts
+In the case of transport if in the middle of the travel we change the day, that is reflected in some way?
+For example:
+```
+SEGMENT: Flight SVQ 2023-03-02 23:40 -> BCN 02:10
+```
+Because if this case would be completed with more information for example:
+```
+SEGMENT: Flight SVQ 2023-03-02 23:40 -> BCN 2023-03-03 02:10
+```
+Because with the current code will raise an error.
+
 ## Installation
 
 TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
