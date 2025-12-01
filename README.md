@@ -1,8 +1,12 @@
 # Fcm
 
-TODO: Delete this and the text below, and describe your gem
+## Development
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/fcm`. To experiment with that code, run `bin/console` for an interactive prompt.
+I decide to create a gem because reading the instructions looks like a console task, run with this command:
+```
+BASED=SVQ bundle exec ruby main.rb input.txt
+```
+with a simple input and output.
 
 ## Installation
 
@@ -22,7 +26,10 @@ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+$ cd lib/
+$ BASED=SVQ bundle exec ruby main.rb input.txt
+```
 
 ## Development
 
