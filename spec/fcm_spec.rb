@@ -76,18 +76,18 @@ RSpec.describe Fcm do
 
     expect(accomodation.accomodation).to eq("Hotel")
     expect(accomodation.destination).to eq("BCN")
-    expect(accomodation.arrival_time).to eq(DateTime.new(2023, 1, 5, 0 ,0))
+    expect(accomodation.arrival_time).to eq(DateTime.new(2023, 1, 5, 0, 0))
     expect(accomodation.departure_time).to eq(DateTime.new(2023, 1, 10, 0, 0))
   end
 
   it "segment with error write error information" do
     data = ["SEGMENT: Train SVQ 2023-13-15 09:30 -> MAD 11:00",
             "SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00"]
-    error_msg = "Error with line: Problem with date in:" +
-    " #{["SEGMENT:", "Train", "SVQ", "2023-13-15", "09:30", "->", "MAD", "11:00"]}\n" +
-    "Error with line: Problem with size in: SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00\n"
+    error_msg = "Error with line: Problem with date in: " \
+                "[\"SEGMENT:\", \"Train\", \"SVQ\", \"2023-13-15\", \"09:30\", \"->\", \"MAD\", \"11:00\"]\n" \
+                "Error with line: Problem with size in: SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00\n"
 
-    expect { Fcm.create_objects(data)}.to output(error_msg).to_stdout
+    expect { Fcm.create_objects(data) }.to output(error_msg).to_stdout
   end
 end
 # rubocop:enable Metrics/BlockLength

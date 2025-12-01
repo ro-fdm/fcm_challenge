@@ -3,9 +3,7 @@
 require "debug"
 require "date"
 require "segment"
-# rubocop:disable Metrics/BlockLength
 RSpec.describe Segment do
-
   it "create transport segment" do
     segment = Segment.new("SEGMENT: Train SVQ 2023-02-15 09:30 -> MAD 11:00")
     expect(segment.transport).to eq("Train")
@@ -19,15 +17,15 @@ RSpec.describe Segment do
     segment = Segment.new("SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17")
     expect(segment.accomodation).to eq("Resort")
     expect(segment.destination).to eq("MAD")
-    expect(segment.arrival_time).to eq(DateTime.new(2023,2,15,0,0))
-    expect(segment.departure_time).to eq(DateTime.new(2023,2,17,0,0))
+    expect(segment.arrival_time).to eq(DateTime.new(2023, 2, 15, 0, 0))
+    expect(segment.departure_time).to eq(DateTime.new(2023, 2, 17, 0, 0))
   end
 
+  # rubocop:disable Layout/ArgumentAlignment
   it "problem with date raise error" do
     date_error_segment = "SEGMENT: Train SVQ 2023-13-15 09:30 -> MAD 11:00"
     expect { Segment.new(date_error_segment) }.to raise_error(Error,
-      "Problem with date in: #{["SEGMENT:", "Train", "SVQ", "2023-13-15", "09:30", "->", "MAD", "11:00"]})
-
+      "Problem with date in: [\"SEGMENT:\", \"Train\", \"SVQ\", \"2023-13-15\", \"09:30\", \"->\", \"MAD\", \"11:00\"]")
   end
 
   it "segment with unexpected number of data raise error" do
@@ -35,4 +33,5 @@ RSpec.describe Segment do
     expect { Segment.new(error_segment) }.to raise_error(Error,
       "Problem with size in: SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00")
   end
+  # rubocop:enable Layout/ArgumentAlignment
 end

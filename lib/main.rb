@@ -7,9 +7,9 @@ module Fcm
   def self.run
     file = ARGV.last
     data = read_file(file) if file && file.split(".").last == "txt"
-    unless data.nil? || data.empty?
-      create_objects(data)
-    end
+    return if data.nil? || data.empty?
+
+    create_objects(data)
   end
 
   def self.read_file(file)
