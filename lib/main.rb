@@ -65,7 +65,7 @@ module Fcm
   end
 
   def self.write_travel(travel)
-    puts "TRIP TO #{travel.first.to}"
+    puts "TRIP to #{travel.first.to}"
     travel.each do |segment|
       puts segment.write_output
     end
