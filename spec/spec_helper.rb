@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "dotenv/load"
+require "dotenv"
 require "main"
 
 RSpec.configure do |config|
