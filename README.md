@@ -32,8 +32,6 @@ if we don't have an accomodation and the second step is other tranport and is le
 connection and we use the city of destinantion of the second transport
 if neither of the previous options happens, we use the destination of the first tranport.
 
-As this are bussiness travel, I am not expecting more than one connection.
-
 
 ## Doubts
 In the case of transport if in the middle of the travel we change the day, that is reflected in some way?
@@ -46,6 +44,8 @@ Because if this case would be completed with more information for example:
 SEGMENT: Flight SVQ 2023-03-02 23:40 -> BCN 2023-03-03 02:10
 ```
 Because with the current code will raise an error.
+
+When I calculate the destination, I am assuming that the travel have only one connection. 
 
 ## Installation
 
