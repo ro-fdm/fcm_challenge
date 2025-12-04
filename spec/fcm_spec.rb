@@ -68,16 +68,17 @@ RSpec.describe Fcm do
     expect(segments.size).to eq(2)
     transport = segments[0]
     accomodation = segments[1]
-    expect(transport.destination).to eq("BCN")
-    expect(transport.departure_place).to eq("SVQ")
+    expect(transport.to).to eq("BCN")
+    expect(transport.from).to eq("SVQ")
     expect(transport.departure_time).to eq(DateTime.new(2023, 3, 2, 6, 40))
     expect(transport.arrival_time).to eq(DateTime.new(2023, 3, 2, 9, 10))
     expect(transport.transport).to eq("Flight")
 
     expect(accomodation.accomodation).to eq("Hotel")
-    expect(accomodation.destination).to eq("BCN")
-    expect(accomodation.arrival_time).to eq(DateTime.new(2023, 1, 5, 0, 0))
-    expect(accomodation.departure_time).to eq(DateTime.new(2023, 1, 10, 0, 0))
+    expect(accomodation.to).to eq("BCN")
+    expect(accomodation.from).to eq("BCN")
+    expect(accomodation.departure_time).to eq(DateTime.new(2023, 1, 5, 23, 59))
+    expect(accomodation.arrival_time).to eq(DateTime.new(2023, 1, 10, 23, 59))
   end
 
   it "segment with error write error information" do
