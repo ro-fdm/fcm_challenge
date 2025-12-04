@@ -65,10 +65,20 @@ module Fcm
   end
 
   def self.write_travel(travel)
-    puts "TRIP to #{travel.first.to}"
+    destination = calculate_destination(travel)
+
+    puts "TRIP to #{destination}"
     travel.each do |segment|
       puts segment.write_output
     end
+  end
+
+  def self.calculate_destination(travel)
+    return travel[1].to if travel[1].accomodation
+
+    return travel[1].to if travel[0].arrival_time <= travel[1].departure_time + 1
+
+    travel[0].to
   end
 end
 
