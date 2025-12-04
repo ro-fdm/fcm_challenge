@@ -78,7 +78,7 @@ RSpec.describe Fcm do
     expect(accomodation.to).to eq("BCN")
     expect(accomodation.from).to eq("BCN")
     expect(accomodation.departure_time).to eq(DateTime.new(2023, 1, 5, 23, 59))
-    expect(accomodation.arrival_time).to eq(DateTime.new(2023, 1, 10, 23, 59))
+    expect(accomodation.arrival_time).to eq(DateTime.new(2023, 1, 10, 0, 0))
   end
 
   it "segment with error write error information" do
@@ -89,6 +89,52 @@ RSpec.describe Fcm do
                 "Error with line: Problem with size in: SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00\n"
 
     expect { Fcm.create_objects(data) }.to output(error_msg).to_stdout
+  end
+
+  it "order segments" do
+    data = ["SEGMENT: Flight SVQ 2023-03-02 06:40 -> BCN 09:10",
+            "SEGMENT: Hotel BCN 2023-01-05 -> 2023-01-10",
+            "SEGMENT: Flight SVQ 2023-01-05 20:40 -> BCN 22:10",
+            "SEGMENT: Flight BCN 2023-01-10 10:30 -> SVQ 11:50",
+            "SEGMENT: Train SVQ 2023-02-15 09:30 -> MAD 11:00",
+            "SEGMENT: Train MAD 2023-02-17 17:00 -> SVQ 19:30",
+            "SEGMENT: Hotel MAD 2023-02-15 -> 2023-02-17",
+            "SEGMENT: Flight BCN 2023-03-02 15:00 -> NYC 22:45"
+            ]
+    segments = Fcm.create_objects(data)
+    sorted_segments = Fcm.sorted_segments(segments)
+
+    expect(sorted_segments.first.to).to eq("BCN")
+    expect(sorted_segments.first.departure_time).to eq(DateTime.new(2023, 1, 5, 20, 40))
+
+    expect(sorted_segments.last.to).to eq("NYC")
+  end
+
+  it "group segments" do
+    data = ["SEGMENT: Flight SVQ 2023-03-02 06:40 -> BCN 09:10",
+            "SEGMENT: Hotel BCN 2023-01-05 -> 2023-01-10",
+            "SEGMENT: Flight SVQ 2023-01-05 20:40 -> BCN 22:10",
+            "SEGMENT: Flight BCN 2023-01-10 10:30 -> SVQ 11:50",
+            "SEGMENT: Train SVQ 2023-02-15 09:30 -> MAD 11:00",
+            "SEGMENT: Train MAD 2023-02-17 17:00 -> SVQ 19:30",
+            "SEGMENT: Hotel MAD 2023-02-15 -> 2023-02-17",
+            "SEGMENT: Flight BCN 2023-03-02 15:00 -> NYC 22:45"
+            ]
+
+    output = "TRIP TO BCN\n" +
+            "Flight from SVQ to BCN at 2023-01-05T20:40:00+00:00 to 2023-01-05T22:10:00+00:00\n" +
+            "Hotel at BCN on 2023-01-05T23:59:00+00:00 to 2023-01-10T00:00:00+00:00\n" +
+            "Flight from BCN to SVQ at 2023-01-10T10:30:00+00:00 to 2023-01-10T11:50:00+00:00\n" +
+            "TRIP TO MAD\n" +
+            "Train from SVQ to MAD at 2023-02-15T09:30:00+00:00 to 2023-02-15T11:00:00+00:00\n" +
+            "Hotel at MAD on 2023-02-15T23:59:00+00:00 to 2023-02-17T00:00:00+00:00\n" +
+            "Train from MAD to SVQ at 2023-02-17T17:00:00+00:00 to 2023-02-17T19:30:00+00:00\n" +
+            "TRIP TO BCN\n" +
+            "Flight from SVQ to BCN at 2023-03-02T06:40:00+00:00 to 2023-03-02T09:10:00+00:00\n" +
+            "Flight from BCN to NYC at 2023-03-02T15:00:00+00:00 to 2023-03-02T22:45:00+00:00\n"
+    segments = Fcm.create_objects(data)
+    sorted_segments = Fcm.sorted_segments(segments)
+    expect {Fcm.group_segments(sorted_segments, "SVQ")}.to output(output).to_stdout
   end
 end
 # rubocop:enable Metrics/BlockLength
