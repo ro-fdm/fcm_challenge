@@ -26,6 +26,15 @@ To know the next steps I use a loop when I search the next step for:
 - the date of arrival of the next step should be later of the departure time of the previous step
 I use a loop because I don't know the number of steps in the travel.
 
+To calculate the destination:
+if the travel have an accomodation we put the city of the accomodation
+if we don't have an accomodation and the second step is other tranport and is less than a 1 day later that the first step, we consider this a
+connection and we use the city of destinantion of the second transport
+if neither of the previous options happens, we use the destination of the first tranport.
+
+As this are bussiness travel, I am not expecting more than one connection.
+
+
 ## Doubts
 In the case of transport if in the middle of the travel we change the day, that is reflected in some way?
 For example:
