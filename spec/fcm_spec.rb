@@ -99,8 +99,7 @@ RSpec.describe Fcm do
             "SEGMENT: Train SVQ 2023-02-15 09:30 -> MAD 11:00",
             "SEGMENT: Train MAD 2023-02-17 17:00 -> SVQ 19:30",
             "SEGMENT: Hotel MAD 2023-02-15 -> 2023-02-17",
-            "SEGMENT: Flight BCN 2023-03-02 15:00 -> NYC 22:45"
-            ]
+            "SEGMENT: Flight BCN 2023-03-02 15:00 -> NYC 22:45"]
     segments = Fcm.create_objects(data)
     sorted_segments = Fcm.sorted_segments(segments)
 
@@ -118,23 +117,22 @@ RSpec.describe Fcm do
             "SEGMENT: Train SVQ 2023-02-15 09:30 -> MAD 11:00",
             "SEGMENT: Train MAD 2023-02-17 17:00 -> SVQ 19:30",
             "SEGMENT: Hotel MAD 2023-02-15 -> 2023-02-17",
-            "SEGMENT: Flight BCN 2023-03-02 15:00 -> NYC 22:45"
-            ]
+            "SEGMENT: Flight BCN 2023-03-02 15:00 -> NYC 22:45"]
 
-    output = "TRIP TO BCN\n" +
-            "Flight from SVQ to BCN at 2023-01-05T20:40:00+00:00 to 2023-01-05T22:10:00+00:00\n" +
-            "Hotel at BCN on 2023-01-05T23:59:00+00:00 to 2023-01-10T00:00:00+00:00\n" +
-            "Flight from BCN to SVQ at 2023-01-10T10:30:00+00:00 to 2023-01-10T11:50:00+00:00\n" +
-            "TRIP TO MAD\n" +
-            "Train from SVQ to MAD at 2023-02-15T09:30:00+00:00 to 2023-02-15T11:00:00+00:00\n" +
-            "Hotel at MAD on 2023-02-15T23:59:00+00:00 to 2023-02-17T00:00:00+00:00\n" +
-            "Train from MAD to SVQ at 2023-02-17T17:00:00+00:00 to 2023-02-17T19:30:00+00:00\n" +
-            "TRIP TO BCN\n" +
-            "Flight from SVQ to BCN at 2023-03-02T06:40:00+00:00 to 2023-03-02T09:10:00+00:00\n" +
-            "Flight from BCN to NYC at 2023-03-02T15:00:00+00:00 to 2023-03-02T22:45:00+00:00\n"
+    output = "TRIP TO BCN\n" \
+             "Flight from SVQ to BCN at 2023-01-05T20:40:00+00:00 to 2023-01-05T22:10:00+00:00\n" \
+             "Hotel at BCN on 2023-01-05T23:59:00+00:00 to 2023-01-10T00:00:00+00:00\n" \
+             "Flight from BCN to SVQ at 2023-01-10T10:30:00+00:00 to 2023-01-10T11:50:00+00:00\n" \
+             "TRIP TO MAD\n" \
+             "Train from SVQ to MAD at 2023-02-15T09:30:00+00:00 to 2023-02-15T11:00:00+00:00\n" \
+             "Hotel at MAD on 2023-02-15T23:59:00+00:00 to 2023-02-17T00:00:00+00:00\n" \
+             "Train from MAD to SVQ at 2023-02-17T17:00:00+00:00 to 2023-02-17T19:30:00+00:00\n" \
+             "TRIP TO BCN\n" \
+             "Flight from SVQ to BCN at 2023-03-02T06:40:00+00:00 to 2023-03-02T09:10:00+00:00\n" \
+             "Flight from BCN to NYC at 2023-03-02T15:00:00+00:00 to 2023-03-02T22:45:00+00:00\n"
     segments = Fcm.create_objects(data)
     sorted_segments = Fcm.sorted_segments(segments)
-    expect {Fcm.group_segments(sorted_segments, "SVQ")}.to output(output).to_stdout
+    expect { Fcm.group_segments(sorted_segments, "SVQ") }.to output(output).to_stdout
   end
 end
 # rubocop:enable Metrics/BlockLength

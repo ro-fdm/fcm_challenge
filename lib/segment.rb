@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require "error"
 require "date"
 
 class Segment
-  attr_accessor :from, :to, :arrival_time, 
+  attr_accessor :from, :to, :arrival_time,
                 :departure_time, :transport, :accomodation
 
   def initialize(line)
@@ -10,9 +12,9 @@ class Segment
   end
 
   def write_output
-    if self.transport
+    if transport
       output_transport
-    elsif self.accomodation
+    elsif accomodation
       output_accomodation
     else
       puts "Dont recognise type of segment"
@@ -25,13 +27,13 @@ class Segment
   # ["SEGMENT:", "Flight", "SVQ", "2023-03-02", "06:40", "->", "BCN", "09:10"]
   # ["SEGMENT:", "Hotel", "BCN", "2023-01-05", "->", "2023-01-10"]
   def create_from_line(line)
-    data = line.split(" ")
+    data = line.split
     if data.size == 8
       write_ticket(data)
     elsif data.size == 6
       write_accomodation(data)
     else
-      raise Error.new("Problem with size in: #{line}")
+      raise Error, "Problem with size in: #{line}"
     end
   end
 
@@ -41,8 +43,8 @@ class Segment
     @departure_time = calculate_date(date: data[3], time: data[4])
     @to = data[6]
     @arrival_time = calculate_date(date: data[3], time: data[7])
-  rescue Date::Error => e
-     raise Error.new("Problem with date in: #{data}")
+  rescue Date::Error
+    raise Error, "Problem with date in: #{data}"
   end
 
   def write_accomodation(data)
@@ -51,8 +53,8 @@ class Segment
     @to = data[2]
     @arrival_time = calculate_date(date: data[5], time: "00:00")
     @departure_time = calculate_date(date: data[3], time: "23:59")
-  rescue Date::Error => e
-    raise Error.new("Problem with date in: #{data}")
+  rescue Date::Error
+    raise Error, "Problem with date in: #{data}"
   end
 
   def output_transport
@@ -66,7 +68,7 @@ class Segment
   def calculate_date(date:, time:)
     date_data = date.split("-")
     time_data = time.split(":")
-    DateTime.new(date_data[0].to_f, 
+    DateTime.new(date_data[0].to_f,
                  date_data[1].to_f,
                  date_data[2].to_f,
                  time_data[0].to_f,

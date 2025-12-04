@@ -16,7 +16,15 @@ Because if, for example, we have an hour to leave an accomodation, example:
 ```
 "SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00"
 ```
-with the current code will raise an error
+with the current code will raise an error.
+
+I order this segments using the departure_time.
+Once the segments are order we can know the initial step of every travel because the
+departure place (or to field) would be the city pass like the environment variable BASED
+To know the next steps I use a loop when I search the next step for:
+- the field `from` the next step should be the field `to` of the previous step
+- the date of arrival of the next step should be later of the departure time of the previous step
+I use a loop because I don't know the number of steps in the travel.
 
 ## Doubts
 In the case of transport if in the middle of the travel we change the day, that is reflected in some way?

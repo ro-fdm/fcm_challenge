@@ -4,11 +4,12 @@ require_relative "fcm/version"
 require "debug"
 require "segment"
 module Fcm
+  # rubocop:disable Metrics/CyclomaticComplexity
   def self.run
-    based = ENV["BASED"]
+    based = ENV.fetch("BASED", nil)
     file = ARGV.last
     return if based.nil? || file.nil?
-    
+
     data = read_file(file) if file.split(".").last == "txt"
     return if data.nil? || data.empty?
 
@@ -18,6 +19,7 @@ module Fcm
     order_segments = sorted_segments(segments)
     group_segments(order_segments, based)
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def self.read_file(file)
     filedata = File.readlines(file)
@@ -35,25 +37,29 @@ module Fcm
   end
 
   def self.sorted_segments(segments)
-    segments.sort_by { |s| s.departure_time }
+    segments.sort_by(&:departure_time)
   end
 
   def self.group_segments(segments, based)
-    initial_segments = segments.select { |s| s.from == based }
-    initial_segments.each do |previous_step|
+    initial_segments(segments).each do |previous_step|
       travel = [previous_step]
       loop do
         next_step = calculate_next_step(segments, previous_step)
         travel << next_step if next_step
         break if next_step.nil? || next_step.to == based
+
         previous_step = next_step
       end
       write_travel(travel)
     end
   end
 
+  def self.initial_segments(segments)
+    segments.select { |s| s.from == based }
+  end
+
   def self.calculate_next_step(segments, previous_step)
-    segments.detect do |step| 
+    segments.detect do |step|
       previous_step.to == step.from && previous_step.arrival_time <= step.departure_time
     end
   end

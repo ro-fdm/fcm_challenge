@@ -3,6 +3,7 @@
 require "debug"
 require "date"
 require "segment"
+# rubocop:disable Metrics/BlockLength
 RSpec.describe Segment do
   it "create transport segment" do
     segment = Segment.new("SEGMENT: Train SVQ 2023-02-15 09:30 -> MAD 11:00")
@@ -48,5 +49,4 @@ RSpec.describe Segment do
     expect(segment.write_output).to eq(output)
   end
 end
-
-
+# rubocop:enable Metrics/BlockLength

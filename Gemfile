@@ -14,4 +14,4 @@ gem "rubocop", "~> 1.21"
 
 gem "debug"
 
-gem "dotenv", groups: [:development, :test]
+gem "dotenv", groups: %i[development test]
