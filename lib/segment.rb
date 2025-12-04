@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 require "error"
-require "date"
+require "date_parse"
 
 class Segment
+  include DateParse
+
   attr_accessor :from, :to, :arrival_time,
                 :departure_time, :transport, :accomodation
 
@@ -58,20 +60,14 @@ class Segment
   end
 
   def output_transport
-    "#{transport} from #{from} to #{to} at #{departure_time} to #{arrival_time}"
+    departure = date_time_parse(departure_time)
+    arrival = time_parse(arrival_time)
+    "#{transport} from #{from} to #{to} at #{departure} to #{arrival}"
   end
 
   def output_accomodation
-    "#{accomodation} at #{from} on #{departure_time} to #{arrival_time}"
-  end
-
-  def calculate_date(date:, time:)
-    date_data = date.split("-")
-    time_data = time.split(":")
-    DateTime.new(date_data[0].to_f,
-                 date_data[1].to_f,
-                 date_data[2].to_f,
-                 time_data[0].to_f,
-                 time_data[1].to_f)
+    departure = date_parse(departure_time)
+    arrival = date_parse(arrival_time)
+    "#{accomodation} at #{from} on #{departure} to #{arrival}"
   end
 end

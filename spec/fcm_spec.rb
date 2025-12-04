@@ -129,17 +129,17 @@ RSpec.describe Fcm do
       end
 
       it "group segments" do
-        output = "TRIP TO BCN\n" \
-                 "Flight from SVQ to BCN at 2023-01-05T20:40:00+00:00 to 2023-01-05T22:10:00+00:00\n" \
-                 "Hotel at BCN on 2023-01-05T23:59:00+00:00 to 2023-01-10T00:00:00+00:00\n" \
-                 "Flight from BCN to SVQ at 2023-01-10T10:30:00+00:00 to 2023-01-10T11:50:00+00:00\n" \
-                 "TRIP TO MAD\n" \
-                 "Train from SVQ to MAD at 2023-02-15T09:30:00+00:00 to 2023-02-15T11:00:00+00:00\n" \
-                 "Hotel at MAD on 2023-02-15T23:59:00+00:00 to 2023-02-17T00:00:00+00:00\n" \
-                 "Train from MAD to SVQ at 2023-02-17T17:00:00+00:00 to 2023-02-17T19:30:00+00:00\n" \
-                 "TRIP TO BCN\n" \
-                 "Flight from SVQ to BCN at 2023-03-02T06:40:00+00:00 to 2023-03-02T09:10:00+00:00\n" \
-                 "Flight from BCN to NYC at 2023-03-02T15:00:00+00:00 to 2023-03-02T22:45:00+00:00\n"
+        output = "TRIP to BCN\n" \
+                 "Flight from SVQ to BCN at 2023-01-05 20:40 to 22:10\n" \
+                 "Hotel at BCN on 2023-01-05 to 2023-01-10\n" \
+                 "Flight from BCN to SVQ at 2023-01-10 10:30 to 11:50\n" \
+                 "TRIP to MAD\n" \
+                 "Train from SVQ to MAD at 2023-02-15 09:30 to 11:00\n" \
+                 "Hotel at MAD on 2023-02-15 to 2023-02-17\n" \
+                 "Train from MAD to SVQ at 2023-02-17 17:00 to 19:30\n" \
+                 "TRIP to BCN\n" \
+                 "Flight from SVQ to BCN at 2023-03-02 06:40 to 09:10\n" \
+                 "Flight from BCN to NYC at 2023-03-02 15:00 to 22:45\n"
         sorted_segments = Fcm.sorted_segments(@segments)
         expect { Fcm.group_segments(sorted_segments, "SVQ") }.to output(output).to_stdout
       end

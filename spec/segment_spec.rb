@@ -39,13 +39,13 @@ RSpec.describe Segment do
 
   it "write output transport" do
     segment = Segment.new("SEGMENT: Train SVQ 2023-02-15 09:30 -> MAD 11:00")
-    output = "Train from SVQ to MAD at 2023-02-15T09:30:00+00:00 to 2023-02-15T11:00:00+00:00"
+    output = "Train from SVQ to MAD at 2023-02-15 09:30 to 11:00"
     expect(segment.write_output).to eq(output)
   end
 
   it "write output accomodation" do
     segment = Segment.new("SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17")
-    output = "Resort at MAD on 2023-02-15T23:59:00+00:00 to 2023-02-17T00:00:00+00:00"
+    output = "Resort at MAD on 2023-02-15 to 2023-02-17"
     expect(segment.write_output).to eq(output)
   end
 end
