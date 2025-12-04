@@ -41,7 +41,7 @@ module Fcm
   end
 
   def self.group_segments(segments, based)
-    initial_segments(segments).each do |previous_step|
+    initial_segments(segments, based).each do |previous_step|
       travel = [previous_step]
       loop do
         next_step = calculate_next_step(segments, previous_step)
@@ -54,7 +54,7 @@ module Fcm
     end
   end
 
-  def self.initial_segments(segments)
+  def self.initial_segments(segments, based)
     segments.select { |s| s.from == based }
   end
 
