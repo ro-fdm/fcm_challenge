@@ -19,7 +19,7 @@ RSpec.describe Segment do
     expect(segment.to).to eq("MAD")
     expect(segment.from).to eq("MAD")
     expect(segment.departure_time).to eq(DateTime.new(2023, 2, 15, 23, 59))
-    expect(segment.arrival_time).to eq(DateTime.new(2023, 2, 17, 23, 59))
+    expect(segment.arrival_time).to eq(DateTime.new(2023, 2, 17, 0, 0))
   end
 
   # rubocop:disable Layout/ArgumentAlignment
@@ -35,4 +35,18 @@ RSpec.describe Segment do
       "Problem with size in: SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00")
   end
   # rubocop:enable Layout/ArgumentAlignment
+
+  it "write output transport" do
+    segment = Segment.new("SEGMENT: Train SVQ 2023-02-15 09:30 -> MAD 11:00")
+    output = "Train from SVQ to MAD at 2023-02-15T09:30:00+00:00 to 2023-02-15T11:00:00+00:00"
+    expect(segment.write_output).to eq(output)
+  end
+
+  it "write output accomodation" do
+    segment = Segment.new("SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17")
+    output = "Resort at MAD on 2023-02-15T23:59:00+00:00 to 2023-02-17T00:00:00+00:00"
+    expect(segment.write_output).to eq(output)
+  end
 end
+
+

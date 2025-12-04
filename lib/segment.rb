@@ -6,16 +6,25 @@ class Segment
                 :departure_time, :transport, :accomodation
 
   def initialize(line)
-    read_line(line)
+    create_from_line(line)
   end
 
+  def write_output
+    if self.transport
+      output_transport
+    elsif self.accomodation
+      output_accomodation
+    else
+      puts "Dont recognise type of segment"
+    end
+  end
 
   private
 
   # examples:
   # ["SEGMENT:", "Flight", "SVQ", "2023-03-02", "06:40", "->", "BCN", "09:10"]
   # ["SEGMENT:", "Hotel", "BCN", "2023-01-05", "->", "2023-01-10"]
-  def read_line(line)
+  def create_from_line(line)
     data = line.split(" ")
     if data.size == 8
       write_ticket(data)
@@ -40,13 +49,21 @@ class Segment
     @accomodation = data[1]
     @from = data[2]
     @to = data[2]
-    @arrival_time = calculate_date(date: data[5])
-    @departure_time = calculate_date(date: data[3])
+    @arrival_time = calculate_date(date: data[5], time: "00:00")
+    @departure_time = calculate_date(date: data[3], time: "23:59")
   rescue Date::Error => e
     raise Error.new("Problem with date in: #{data}")
   end
 
-  def calculate_date(date:, time: "23:59")
+  def output_transport
+    "#{transport} from #{from} to #{to} at #{departure_time} to #{arrival_time}"
+  end
+
+  def output_accomodation
+    "#{accomodation} at #{from} on #{departure_time} to #{arrival_time}"
+  end
+
+  def calculate_date(date:, time:)
     date_data = date.split("-")
     time_data = time.split(":")
     DateTime.new(date_data[0].to_f, 
