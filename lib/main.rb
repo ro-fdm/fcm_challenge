@@ -98,6 +98,7 @@ module Fcm
     value
   end
 
+  # rubocop:disable Metrics/MethodLength
   def self.print_error(object)
     keys = object.keys
     msg = if keys.include?(:based) && object[:based].nil?
@@ -112,6 +113,7 @@ module Fcm
 
     puts "Error: #{msg}"
   end
+  # rubocop:enable Metrics/MethodLength
 end
 
 Fcm.run
