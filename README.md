@@ -1,5 +1,7 @@
 # Fcm
-
+TOMORROW DOCKER AND DOCKER BUILDX
+y añadir test para cuando nos falta un trozo de informacion
+dejar en otra rama
 ## Development
 
 I decide to create a gem because reading the instructions looks like a console task, run with this command:
@@ -45,7 +47,29 @@ SEGMENT: Flight SVQ 2023-03-02 23:40 -> BCN 2023-03-03 02:10
 ```
 Because with the current code will raise an error.
 
-When I calculate the destination, I am assuming that the travel have only one connection. 
+When I calculate the destination, I am assuming that the travel have only one connection.
+
+## Test
+You can use different file for testing:
+in group_data we have have the three options for calculate destination:
+one travel with accomodation
+one with connection and not accomodation
+and one travel with only outbound journey
+Move to lib:
+```
+$ cd lib/
+$ BASED=MAD bundle exec ruby main.rb ../spec/group_data.txt 
+```
+
+in empty_data.txt we have a txt.file but without any right line
+```
+BASED=SVQ bundle exec ruby main.rb ../spec/empty_data.txt 
+```
+
+in test_data.txt we have only part of the information of input.txt for simpler results for tests.
+
+
+
 
 ## Installation
 
