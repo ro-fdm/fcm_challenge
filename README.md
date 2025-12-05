@@ -41,10 +41,10 @@ I use a loop because I don't know the number of steps in the travel.
 ### Calculate the destination
 We use the next logic:\
 - If the travel have an accomodation we use the city of the accomodation.\
-<br/>
+
 - If we don't have an accomodation and the second step is other tranport and is less than a 1 day later that the first step, we consider this a
 connection and we use the city of destination of the second transport.\
-<br/>
+
 - If neither of the previous options happens, we use the destination of the first tranport.\
 
 
