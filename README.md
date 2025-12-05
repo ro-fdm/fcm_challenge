@@ -34,18 +34,19 @@ But I prefer to begin with a one type of object and if I needed in the future sp
 I order the segments using the `departure_time`.\
 Once the segments are ordered we can know the initial step of every travel because the `from` field would be the city identify by IATA that was passed like the environment variable BASED.\
 To know the next steps for every travel I use a loop where I search the next step for:\
-- the field `from` the next step should be the field `to` of the previous step.\
+- the field `from` the next step should be the field `to` of the previous step.
 - the date of arrival of the next step should be later of the departure time of the previous step.\
+
 I use a loop because I don't know the number of steps in the travel.  
 
 ### Calculate the destination
-We use the next logic:\
-- If the travel have an accomodation we use the city of the accomodation.\
+We use the next logic:
+- If the travel have an accomodation we use the city of the accomodation.
 
 - If we don't have an accomodation and the second step is other tranport and is less than a 1 day later that the first step, we consider this a
-connection and we use the city of destination of the second transport.\
+connection and we use the city of destination of the second transport.
 
-- If neither of the previous options happens, we use the destination of the first tranport.\
+- If neither of the previous options happens, we use the destination of the first tranport.
 
 
 ## Doubts
