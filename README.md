@@ -1,5 +1,7 @@
 # Fcm
-
+TOMORROW DOCKER AND DOCKER BUILDX
+y añadir test para cuando nos falta un trozo de informacion
+dejar en otra rama
 ## Development
 
 I decide to create a gem because reading the instructions looks like a console task, run with this command:
@@ -16,7 +18,22 @@ Because if, for example, we have an hour to leave an accomodation, example:
 ```
 "SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00"
 ```
-with the current code will raise an error
+with the current code will raise an error.
+
+I order this segments using the departure_time.
+Once the segments are order we can know the initial step of every travel because the
+departure place (or to field) would be the city pass like the environment variable BASED
+To know the next steps I use a loop when I search the next step for:
+- the field `from` the next step should be the field `to` of the previous step
+- the date of arrival of the next step should be later of the departure time of the previous step
+I use a loop because I don't know the number of steps in the travel.
+
+To calculate the destination:
+if the travel have an accomodation we put the city of the accomodation
+if we don't have an accomodation and the second step is other tranport and is less than a 1 day later that the first step, we consider this a
+connection and we use the city of destinantion of the second transport
+if neither of the previous options happens, we use the destination of the first tranport.
+
 
 ## Doubts
 In the case of transport if in the middle of the travel we change the day, that is reflected in some way?
@@ -29,6 +46,30 @@ Because if this case would be completed with more information for example:
 SEGMENT: Flight SVQ 2023-03-02 23:40 -> BCN 2023-03-03 02:10
 ```
 Because with the current code will raise an error.
+
+When I calculate the destination, I am assuming that the travel have only one connection.
+
+## Test
+You can use different file for testing:
+in group_data we have have the three options for calculate destination:
+one travel with accomodation
+one with connection and not accomodation
+and one travel with only outbound journey
+Move to lib:
+```
+$ cd lib/
+$ BASED=MAD bundle exec ruby main.rb ../spec/group_data.txt 
+```
+
+in empty_data.txt we have a txt.file but without any right line
+```
+BASED=SVQ bundle exec ruby main.rb ../spec/empty_data.txt 
+```
+
+in test_data.txt we have only part of the information of input.txt for simpler results for tests.
+
+
+
 
 ## Installation
 
