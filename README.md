@@ -1,14 +1,29 @@
 # Fcm
-TOMORROW DOCKER AND DOCKER BUILDX
-y añadir test para cuando nos falta un trozo de informacion
-dejar en otra rama
+
+## Installation
+
+If you have ruby 3.3.6 and bundle:
+```
+$ git clone git@github.com:ro-fdm/fcm_challenge.git
+$ bundle install
+$ cd lib/
+$ BASED=SVQ bundle exec ruby main.rb input.txt
+```
+or you can use docker:
+```
+$ docker build fcm .
+$ docker run -it fcm /bin/bash
+root@number:/app# cd lib/
+root@number:/app/lib# BASED=SVQ bundle exec ruby main.rb input.txt
+```
+
 ## Development
 
-I decide to create a gem because reading the instructions looks like a console task, run with this command:
+I decide to create a gem because reading the instructions looks like a terminal task that it run with this command:
 ```
 BASED=SVQ bundle exec ruby main.rb input.txt
 ```
-with a simple input and output.
+Besides this task has a simple input and output.
 
 I decided to create a type of object, Segment, to save the information of every line with information.
 I see two types of data, some are accomodations and other tickets for transport.
@@ -20,18 +35,21 @@ Because if, for example, we have an hour to leave an accomodation, example:
 ```
 with the current code will raise an error.
 
+To group the step and create travels:
 I order this segments using the departure_time.
-Once the segments are order we can know the initial step of every travel because the
-departure place (or to field) would be the city pass like the environment variable BASED
-To know the next steps I use a loop when I search the next step for:
+Once the segments are order we can know the initial step of every travel because the `from` field would be the city identify by IATA that was passed like the environment variable BASED
+To know the next steps for every travel I use a loop where I search the next step for:
 - the field `from` the next step should be the field `to` of the previous step
 - the date of arrival of the next step should be later of the departure time of the previous step
 I use a loop because I don't know the number of steps in the travel.
 
 To calculate the destination:
-if the travel have an accomodation we put the city of the accomodation
+We use the next logic:
+If the travel have an accomodation we use the city of the accomodation.
+
 if we don't have an accomodation and the second step is other tranport and is less than a 1 day later that the first step, we consider this a
-connection and we use the city of destinantion of the second transport
+connection and we use the city of destination of the second transport.
+
 if neither of the previous options happens, we use the destination of the first tranport.
 
 
@@ -50,60 +68,30 @@ Because with the current code will raise an error.
 When I calculate the destination, I am assuming that the travel have only one connection.
 
 ## Test
-You can use different file for testing:
-in group_data.txt we have have the three options for calculate destination:
+I have wrote several files for testing:
+- group_data.txt we have have the three options for calculate destination:
 one travel with accomodation
 one with connection and not accomodation
 and one travel with only outbound journey
-Move to lib:
+And we can use this files in the terminal to see the output:
 ```
 $ cd lib/
 $ BASED=MAD bundle exec ruby main.rb ../spec/group_data.txt 
 ```
 
-with empty_data.txt we have a txt.file but without any right line
+- empty_data.txt we have a txt.file but without any right line
 ```
 BASED=SVQ bundle exec ruby main.rb ../spec/empty_data.txt 
 ```
 
-with error_data.txt we can see segments error in action:
+- error_data.txt we can see segments with errors in action:
 ```
 $ BASED=SVQ bundle exec ruby main.rb ../spec/error_data.txt
 ```
 
-In test_data.txt we have only part of the information of input.txt for simpler results for tests.
+- test_data.txt we have only part of the information of input.txt for simpler results for tests
 
-
-
-
-## Installation
-
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
-
-## Usage
-
-```
-$ cd lib/
-$ BASED=SVQ bundle exec ruby main.rb input.txt
-```
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Besides, I added some messages by typical errors for users, like forget the BASED environment, or the file, or use a file that is not a txt.
 
 ## Contributing
 
