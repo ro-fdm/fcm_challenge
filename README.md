@@ -28,14 +28,14 @@ Besides this task has a simple input and output.
 ### Object
 I decided to create a type of object, Segment, to save the information of every line with information.\
 I identify two types of data, some are reservations for accomodations and other tickets for transport.\
-But I prefer to begin with a one type of object and if I needed in the future split to two, instead of create two different objects in this step.\
+But I prefer to begin with a one type of object and if I needed in the future split to two, instead of create two different objects in this step.
 
 ### Group the segments in travels
 I order the segments using the `departure_time`.\
 Once the segments are ordered we can know the initial step of every travel because the `from` field would be the city identify by IATA that was passed like the environment variable BASED.\
-To know the next steps for every travel I use a loop where I search the next step for:\
+To know the next steps for every travel I use a loop where I search the next step for:
 - the field `from` the next step should be the field `to` of the previous step.
-- the date of arrival of the next step should be later of the departure time of the previous step.\
+- the date of arrival of the next step should be later of the departure time of the previous step.
 
 I use a loop because I don't know the number of steps in the travel.  
 
