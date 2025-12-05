@@ -51,7 +51,7 @@ When I calculate the destination, I am assuming that the travel have only one co
 
 ## Test
 You can use different file for testing:
-in group_data we have have the three options for calculate destination:
+in group_data.txt we have have the three options for calculate destination:
 one travel with accomodation
 one with connection and not accomodation
 and one travel with only outbound journey
@@ -61,12 +61,17 @@ $ cd lib/
 $ BASED=MAD bundle exec ruby main.rb ../spec/group_data.txt 
 ```
 
-in empty_data.txt we have a txt.file but without any right line
+with empty_data.txt we have a txt.file but without any right line
 ```
 BASED=SVQ bundle exec ruby main.rb ../spec/empty_data.txt 
 ```
 
-in test_data.txt we have only part of the information of input.txt for simpler results for tests.
+with error_data.txt we can see segments error in action:
+```
+$ BASED=SVQ bundle exec ruby main.rb ../spec/error_data.txt
+```
+
+In test_data.txt we have only part of the information of input.txt for simpler results for tests.
 
 
 
