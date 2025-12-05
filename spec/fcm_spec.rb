@@ -166,7 +166,8 @@ RSpec.describe Fcm do
               "SEGMENT: Hotel IBZ 2025-01-01 -> 2025-01-08\n",
               "SEGMENT: Flight IBZ 2025-01-08 20:40 -> MAD 22:10\n",
               "SEGMENT: Train EAS 2025-02-10 10:40 -> BIO 12:00\n",
-              "SEGMENT: Fligth BIO 2025-02-10 12:30 -> MAD 14:30"]
+              "SEGMENT: Fligth BIO 2025-02-10 12:30 -> MAD 14:30\n",
+              "SEGMENT: Fligth MAD 2025-03-08 11:35 -> BCN 13:00"]
       expect(Fcm.read_file("spec/group_data.txt")).to eq(data)
     end
 
@@ -181,7 +182,9 @@ RSpec.describe Fcm do
                   "Flight from MAD to BIO at 2025-02-01 08:00 to 09:10\n" \
                   "Train from BIO to EAS at 2025-02-01 09:30 to 12:00\n" \
                   "Train from EAS to BIO at 2025-02-10 10:40 to 12:00\n" \
-                  "Fligth from BIO to MAD at 2025-02-10 12:30 to 14:30\n"
+                  "Fligth from BIO to MAD at 2025-02-10 12:30 to 14:30\n" \
+                  "TRIP to BCN\n" \
+                  "Fligth from MAD to BCN at 2025-03-08 11:35 to 13:00\n"
         data = ["SEGMENT: Flight MAD 2025-01-01 06:40 -> BCN 09:10\n",
                 "SEGMENT: Flight BCN 2025-01-01 11:40 -> IBZ 13:40\n",
                 "SEGMENT: Flight MAD 2025-02-01 08:00 -> BIO 09:10\n",
@@ -189,13 +192,14 @@ RSpec.describe Fcm do
                 "SEGMENT: Hotel IBZ 2025-01-01 -> 2025-01-08\n",
                 "SEGMENT: Flight IBZ 2025-01-08 20:40 -> MAD 22:10\n",
                 "SEGMENT: Train EAS 2025-02-10 10:40 -> BIO 12:00\n",
-                "SEGMENT: Fligth BIO 2025-02-10 12:30 -> MAD 14:30"]
+                "SEGMENT: Fligth BIO 2025-02-10 12:30 -> MAD 14:30\n",
+                "SEGMENT: Fligth MAD 2025-03-08 11:35 -> BCN 13:00"]
         @segments = Fcm.create_objects(data)
       end
 
       it "initial segments" do
         initial_segments = Fcm.initial_segments(@segments, "MAD")
-        expect(initial_segments.size).to eq(2)
+        expect(initial_segments.size).to eq(3)
       end
 
       it "order segments" do
@@ -204,8 +208,8 @@ RSpec.describe Fcm do
         expect(sorted_segments.first.to).to eq("BCN")
         expect(sorted_segments.first.departure_time).to eq(DateTime.new(2025, 1, 1, 6, 40))
 
-        expect(sorted_segments.last.to).to eq("MAD")
-        expect(sorted_segments.last.arrival_time).to eq(DateTime.new(2025, 2, 10, 14, 30))
+        expect(sorted_segments.last.to).to eq("BCN")
+        expect(sorted_segments.last.arrival_time).to eq(DateTime.new(2025, 3, 8, 13, 0))
       end
 
       it "group segments" do

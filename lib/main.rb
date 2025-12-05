@@ -77,7 +77,7 @@ module Fcm
     accomodation = travel.detect(&:accomodation)
     return accomodation.to if accomodation
 
-    return travel[1].to if travel[0].arrival_time <= travel[1].departure_time + 1
+    return travel[1].to if travel[1] && travel[0].arrival_time <= travel[1].departure_time + 1
 
     travel[0].to
   end
