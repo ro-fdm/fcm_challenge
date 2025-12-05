@@ -8,13 +8,22 @@ module Fcm
   def self.run
     based = ENV.fetch("BASED", nil)
     file = ARGV.last
-    return if based.nil? || file.nil?
+    if based.nil? || file.nil? || file.split(".").last != "txt"
+      print_error(based, file)
+      return
+    end
 
-    data = read_file(file) if file.split(".").last == "txt"
-    return if data.nil? || data.empty?
+    data = read_file(file)
+    if data.nil? || data.empty?
+      print_error(based, file, "not right data in the file")
+      return
+    end
 
     segments = create_objects(data)
-    return if segments.nil? || segments.empty?
+    if segments.nil? || segments.empty?
+      print_error(based, file, "no created segments")
+      return
+    end
 
     order_segments = sorted_segments(segments)
     group_segments(order_segments, based)
@@ -80,6 +89,20 @@ module Fcm
     return travel[1].to if travel[1] && travel[0].arrival_time <= travel[1].departure_time + 1
 
     travel[0].to
+  end
+
+  def self.print_error(based, file, message = nil)
+    error = if based.nil?
+              "not passed BASED environment variable"
+            elsif file.nil?
+              "not passed file to read"
+            elsif file.split(".").last != "txt"
+              "file is not a txt"
+            else
+              message
+            end
+
+    puts "Error: #{error}"
   end
 end
 

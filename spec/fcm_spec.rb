@@ -12,6 +12,23 @@ RSpec.describe Fcm do
     Fcm.run
   end
 
+  it "return error if not based env" do
+    error_output = "Error: not passed BASED environment variable\n"
+    expect { Fcm.run }.to output(error_output).to_stdout
+  end
+
+  context "with based not related to data" do
+    before do
+      Dotenv.load("no_data.env")
+    end
+
+    it "not output" do
+      ARGV.clear
+      ARGV += ["lib/input.txt"]
+      expect { Fcm.run }.to output("").to_stdout      
+    end
+  end
+
   context "with based" do
     before do
       Dotenv.load
@@ -30,11 +47,23 @@ RSpec.describe Fcm do
       Fcm.run
     end
 
+    it "return error if not file" do
+      error_output = "Error: not passed file to read\n"
+      expect { Fcm.run }.to output(error_output).to_stdout
+    end
+
     it "file is not txt not read" do
       ARGV.clear
       ARGV += ["lib/input.csv"]
       expect(Fcm).not_to receive(:read_file)
       Fcm.run
+    end
+
+    it "print error file is not a txt" do
+      ARGV.clear
+      ARGV += ["lib/input.csv"]
+      error_output = "Error: file is not a txt\n"
+      expect { Fcm.run }.to output(error_output).to_stdout
     end
 
     it "return info segment lines" do
@@ -62,6 +91,13 @@ RSpec.describe Fcm do
       ARGV.clear
       ARGV += ["spec/empty_data.txt"]
       expect(Fcm).not_to receive(:create_objects)
+    end
+
+    it "print error is not right data in file" do
+      ARGV.clear
+      ARGV += ["spec/empty_data.txt"]
+      error_output = "Error: not right data in the file\n"
+      expect { Fcm.run }.to output(error_output).to_stdout
     end
 
     it "create_objects" do
@@ -100,6 +136,26 @@ RSpec.describe Fcm do
 
       expect { Fcm.create_objects(data) }.to output(error_msg).to_stdout
     end
+
+    it "with not create segments not call sorted_segments" do
+      ARGV.clear
+      ARGV += ["spec/segment_error.txt"]
+      expect(Fcm).not_to receive(:sorted_segments)
+      Fcm.run
+    end
+
+    # rubocop:disable Layout/LineLength
+    it "when we dont create segments because info is wrong" do
+      ARGV.clear
+      ARGV += ["spec/segment_error.txt"]
+      error_output = "Error with line: Problem with size in: SEGMENT: Flight SVQ 2023-03-02 06:40 -> BCN 2023-03-02 09:10\n" \
+                     "Error with line: Problem with date in: [\"SEGMENT:\", \"Hotel\", \"BCN\", \"2023-13-05\", \"->\", \"2023-01-10\"]\n" \
+                     "Error with line: Problem with date in: [\"SEGMENT:\", \"Flight\", \"SVQ\", \"2023-01-05\", \"20:40\", \"->\", \"BCN\", \"25:10\"]\n" \
+                     "Error with line: Problem with date in: [\"SEGMENT:\", \"Flight\", \"BCN\", \"2023-14-10\", \"10:30\", \"->\", \"SVQ\", \"11:50\"]\n" \
+                     "Error: no created segments\n"
+      expect { Fcm.run }.to output(error_output).to_stdout
+    end
+    # rubocop:enable Layout/LineLength
 
     context "with segments created" do
       before do
