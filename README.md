@@ -18,43 +18,45 @@ root@number:/app/lib# BASED=SVQ bundle exec ruby main.rb input.txt
 ```
 
 ## Development
-
+### Gem
 I decide to create a gem because reading the instructions looks like a terminal task that it run with this command:
 ```
 BASED=SVQ bundle exec ruby main.rb input.txt
 ```
 Besides this task has a simple input and output.
 
+### Object
 I decided to create a type of object, Segment, to save the information of every line with information.\
-I see two types of data, some are accomodations and other tickets for transport.\
-But I prefer to begin with a one type of object and if I needed in the future split to two,  instead of create two different objects in this step.\
-I am using the number of words in the line to identify the data, then in normals conditions of work I would ask if we are sure about this.
-Because if, for example, we have an hour to leave an accomodation, example:
-```
-"SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00"
-```
-with the current code will raise an error.
+I identify two types of data, some are reservations for accomodations and other tickets for transport.\
+But I prefer to begin with a one type of object and if I needed in the future split to two, instead of create two different objects in this step.\
 
-To group the step and create travels:\
-I order this segments using the departure_time.\
+### Group the segments in travels
+I order the segments using the `departure_time`.\
 Once the segments are ordered we can know the initial step of every travel because the `from` field would be the city identify by IATA that was passed like the environment variable BASED.\
 To know the next steps for every travel I use a loop where I search the next step for:\
 - the field `from` the next step should be the field `to` of the previous step.\
 - the date of arrival of the next step should be later of the departure time of the previous step.\
 I use a loop because I don't know the number of steps in the travel.  
 
-To calculate the destination:\
+### Calculate the destination
 We use the next logic:\
-If the travel have an accomodation we use the city of the accomodation.\
+- If the travel have an accomodation we use the city of the accomodation.\
 <br/>
-If we don't have an accomodation and the second step is other tranport and is less than a 1 day later that the first step, we consider this a
+- If we don't have an accomodation and the second step is other tranport and is less than a 1 day later that the first step, we consider this a
 connection and we use the city of destination of the second transport.\
 <br/>
-If neither of the previous options happens, we use the destination of the first tranport.\
+- If neither of the previous options happens, we use the destination of the first tranport.\
 
 
 ## Doubts
-In the case of transport if in the middle of the travel we change the day, that is reflected in some way?
+1. I am using the number of words in the line to identify the data, then in normals conditions of work I would ask if we are sure about this.
+Because if, for example, we have an hour to leave an accomodation, example:
+```
+"SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00"
+```
+with the current code will raise an error.
+
+2. In the case of transport if in the middle of the travel we change the day, that is reflected in some way?
 For example:
 ```
 SEGMENT: Flight SVQ 2023-03-02 23:40 -> BCN 02:10
@@ -65,7 +67,7 @@ SEGMENT: Flight SVQ 2023-03-02 23:40 -> BCN 2023-03-03 02:10
 ```
 Because with the current code will raise an error.
 
-When I calculate the destination, I am assuming that the travel have only one connection.
+3. When I calculate the destination, I am assuming that the travel have only one connection. If we have more than one connection the destination would not be show rightly.
 
 ## Test
 I have wrote several files for testing:  
