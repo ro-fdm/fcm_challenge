@@ -25,7 +25,7 @@ RSpec.describe Fcm do
     it "not output" do
       ARGV.clear
       ARGV += ["lib/input.txt"]
-      expect { Fcm.run }.to output("").to_stdout      
+      expect { Fcm.run }.to output("").to_stdout
     end
   end
 
