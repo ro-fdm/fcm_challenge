@@ -39,8 +39,7 @@ module Fcm
   end
 
   def self.group_segments(segments, based)
-    initial_segments = initial_segments(segments, based)
-    initial_segments.each do |previous_step|
+    initial_segments(segments, based).each do |previous_step|
       segments.delete(previous_step)
       travel = [previous_step]
       segments.each do |next_step|
