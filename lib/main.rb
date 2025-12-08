@@ -39,27 +39,21 @@ module Fcm
   end
 
   def self.group_segments(segments, based)
-    initial_segments(segments, based).each do |previous_step|
+    initial_segments = initial_segments(segments, based)
+    initial_segments.each do |previous_step|
+      segments.delete(previous_step)
       travel = [previous_step]
-      loop do
-        next_step = calculate_next_step(segments, previous_step)
-        travel << next_step if next_step
-        break if next_step.nil? || next_step.to == based
-
-        previous_step = next_step
+      segments.each do |next_step|
+        break if next_step.from == based
+        travel << next_step
       end
+      segments = segments - travel
       write_travel(travel)
     end
   end
 
   def self.initial_segments(segments, based)
     segments.select { |s| s.from == based }
-  end
-
-  def self.calculate_next_step(segments, previous_step)
-    segments.detect do |step|
-      previous_step.to == step.from && previous_step.arrival_time <= step.departure_time
-    end
   end
 
   def self.write_travel(travel)
@@ -75,7 +69,7 @@ module Fcm
     accomodation = travel.detect(&:accomodation)
     return accomodation.to if accomodation
 
-    return travel[1].to if travel[1] && travel[0].arrival_time <= travel[1].departure_time + 1
+    return travel[1].to if travel[1] && travel[1].departure_time <= travel[0].arrival_time + 1
 
     travel[0].to
   end
