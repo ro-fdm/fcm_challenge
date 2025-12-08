@@ -1,42 +1,66 @@
 # Fcm
-TOMORROW DOCKER AND DOCKER BUILDX
-y añadir test para cuando nos falta un trozo de informacion
-dejar en otra rama
-## Development
 
-I decide to create a gem because reading the instructions looks like a console task, run with this command:
+## Installation
+
+If you have ruby 3.3.6 and bundle:
+```
+$ git clone git@github.com:ro-fdm/fcm_challenge.git
+$ bundle install
+$ cd lib/
+$ BASED=SVQ bundle exec ruby main.rb input.txt
+```
+or you can use docker:
+```
+$ docker build fcm .
+```
+or
+```
+$ docker buildx build . -t fcm
+```
+and
+```
+$ docker run -it fcm /bin/bash
+root@number:/app# cd lib/
+root@number:/app/lib# BASED=SVQ bundle exec ruby main.rb input.txt
+```
+
+## Development
+### Gem
+I decided to create a gem because, after reading the instructions, it seems like a terminal task that it executed with this command:
 ```
 BASED=SVQ bundle exec ruby main.rb input.txt
 ```
-with a simple input and output.
+Besides this task has a simple input and output, and don't need persistence.
 
-I decided to create a type of object, Segment, to save the information of every line with information.
-I see two types of data, some are accomodations and other tickets for transport.
-But I prefer to begin with a one type of object and if I needed in the future split to two,  instead of create two different objects in this step.
-I am using the number of words in the line to identify the data, then in normals conditions of work I would ask if we are sure about this.
+### Object
+I decided to create a type of object, Segment, to save the information of every line.\
+I identify two types of data, some are reservations for accomodations and other tickets for transport.\
+But I prefer to start with one type of object and, if in the future, I need in to split them into two, rather than creating two different objects in this step.
+
+### Group the segments in travels
+I order the segments using `departure_time`.\
+Once the segments are ordered, we can know the initial step of every travel because the `from` field would be the city identify by IATA that was passed like the environment variable BASED.\
+Because I have the steps ordered, I add every next segment until I arrive to the next initial step. \
+
+### Calculate the destination
+We use the next logic:
+- If the travel have an accomodation we use the city of the accomodation.
+
+- If we don't have an accomodation and the second step is other tranport and is less than a 1 day later that the first step, we consider this a
+connection and we use the city of destination of the second transport.
+
+- If neither of the previous options happens, we use the destination of the first tranport.
+
+
+## Doubts
+1. I am using the number of words on the line to identify the data, then under normal working conditions, I would ask if we are sure about this.
 Because if, for example, we have an hour to leave an accomodation, example:
 ```
 "SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00"
 ```
 with the current code will raise an error.
 
-I order this segments using the departure_time.
-Once the segments are order we can know the initial step of every travel because the
-departure place (or to field) would be the city pass like the environment variable BASED
-To know the next steps I use a loop when I search the next step for:
-- the field `from` the next step should be the field `to` of the previous step
-- the date of arrival of the next step should be later of the departure time of the previous step
-I use a loop because I don't know the number of steps in the travel.
-
-To calculate the destination:
-if the travel have an accomodation we put the city of the accomodation
-if we don't have an accomodation and the second step is other tranport and is less than a 1 day later that the first step, we consider this a
-connection and we use the city of destinantion of the second transport
-if neither of the previous options happens, we use the destination of the first tranport.
-
-
-## Doubts
-In the case of transport if in the middle of the travel we change the day, that is reflected in some way?
+2. In the case of transport: if in the middle of the travel we change the day, that is reflected in some way?
 For example:
 ```
 SEGMENT: Flight SVQ 2023-03-02 23:40 -> BCN 02:10
@@ -45,69 +69,45 @@ Because if this case would be completed with more information for example:
 ```
 SEGMENT: Flight SVQ 2023-03-02 23:40 -> BCN 2023-03-03 02:10
 ```
-Because with the current code will raise an error.
+With the current code will raise an error.
 
-When I calculate the destination, I am assuming that the travel have only one connection.
+3. When calculating the destination, I assume the trip has only one connection. If there is more than one, the destination won't display correctly. 
+I can add a loop for several connections, but since these are business travels don't look likely.
 
 ## Test
-You can use different file for testing:
-in group_data.txt we have have the three options for calculate destination:
-one travel with accomodation
-one with connection and not accomodation
-and one travel with only outbound journey
-Move to lib:
+I have wrote several files for testing:  
+- group_data.txt we have have the three options for calculate destination:
+  1. One travel with accomodation  
+  2. One with connection and not accomodation
+  3. One travel with only outbound journey
+And we can use this files in the terminal to see the output:
 ```
 $ cd lib/
 $ BASED=MAD bundle exec ruby main.rb ../spec/group_data.txt 
 ```
 
-with empty_data.txt we have a txt.file but without any right line
+- empty_data.txt we have a txt.file but without any right line
 ```
 BASED=SVQ bundle exec ruby main.rb ../spec/empty_data.txt 
 ```
 
-with error_data.txt we can see segments error in action:
+- error_data.txt we can see segments with errors in action:
 ```
 $ BASED=SVQ bundle exec ruby main.rb ../spec/error_data.txt
 ```
 
-In test_data.txt we have only part of the information of input.txt for simpler results for tests.
+- test_data.txt we have only part of the information of input.txt for simpler results for tests.
 
-
-
-
-## Installation
-
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+- lack_info.txt with a special case when we have two travels to the same place and not info about return in the first.
+```
+$ BASED=SVQ bundle exec ruby main.rb ../spec/lack_info.txt
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
-
-## Usage
-
-```
-$ cd lib/
-$ BASED=SVQ bundle exec ruby main.rb input.txt
-```
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Besides, I added some messages by typical errors for users, like forget the BASED environment, or the file, or use a file that is not a txt.  
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/fcm.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ro-fcm/fcm_challenge.
 
 ## License
 
