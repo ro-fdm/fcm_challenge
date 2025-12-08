@@ -273,6 +273,59 @@ RSpec.describe Fcm do
         expect { Fcm.group_segments(sorted_segments, "MAD") }.to output(@output).to_stdout
       end
     end
+
+    context "when we don't have info for return in a previous trip" do
+      it "read_file" do
+        ARGV.clear
+        ARGV += ["spec/lack_info.txt"]
+        expect(Fcm).to receive(:read_file)
+        Fcm.run
+      end
+
+      it "return info segment lines" do
+        data = ["SEGMENT: Flight SVQ 2023-03-02 06:40 -> BCN 09:10\n",
+                "SEGMENT: Hotel BCN 2023-01-05 -> 2023-01-10\n",
+                "SEGMENT: Flight SVQ 2023-01-05 20:40 -> BCN 22:10\n",
+                "SEGMENT: Flight BCN 2023-03-10 10:30 -> SVQ 11:50"]
+        expect(Fcm.read_file("spec/lack_info.txt")).to eq(data)
+      end
+
+      context "with segments created" do
+        before do
+          @output = "TRIP to BCN\n" \
+                    "Flight from SVQ to BCN at 2023-01-05 20:40 to 22:10\n" \
+                    "Hotel at BCN on 2023-01-05 to 2023-01-10\n" \
+                    "TRIP to BCN\n" \
+                    "Flight from SVQ to BCN at 2023-03-02 06:40 to 09:10\n" \
+                    "Fligth from BCN to SVQ at 2023-03-10 10:30 to 11:50\n"
+          data = ["SEGMENT: Flight SVQ 2023-03-02 06:40 -> BCN 09:10\n",
+                  "SEGMENT: Hotel BCN 2023-01-05 -> 2023-01-10\n",
+                  "SEGMENT: Flight SVQ 2023-01-05 20:40 -> BCN 22:10\n",
+                  "SEGMENT: Fligth BCN 2023-03-10 10:30 -> SVQ 11:50\n"]
+          @segments = Fcm.create_objects(data)
+        end
+
+        it "initial segments" do
+          initial_segments = Fcm.initial_segments(@segments, "SVQ")
+          expect(initial_segments.size).to eq(2)
+        end
+
+        it "order segments" do
+          sorted_segments = Fcm.sorted_segments(@segments)
+
+          expect(sorted_segments.first.to).to eq("BCN")
+          expect(sorted_segments.first.departure_time).to eq(DateTime.new(2023, 1, 5, 20, 40))
+
+          expect(sorted_segments.last.to).to eq("SVQ")
+          expect(sorted_segments.last.arrival_time).to eq(DateTime.new(2023, 3, 10, 11, 50))
+        end
+
+        it "group segments" do
+          sorted_segments = Fcm.sorted_segments(@segments)
+          expect { Fcm.group_segments(sorted_segments, "SVQ") }.to output(@output).to_stdout
+        end
+      end
+    end
   end
 end
 # rubocop:enable Metrics/BlockLength
