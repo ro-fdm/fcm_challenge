@@ -45,9 +45,10 @@ module Fcm
       travel = [previous_step]
       segments.each do |next_step|
         break if next_step.from == based
+
         travel << next_step
       end
-      segments = segments - travel
+      segments -= travel
       write_travel(travel)
     end
   end

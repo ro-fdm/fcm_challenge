@@ -273,7 +273,7 @@ RSpec.describe Fcm do
         expect { Fcm.group_segments(sorted_segments, "MAD") }.to output(@output).to_stdout
       end
     end
-  
+
     context "when we don't have info for return in a previous trip" do
       it "read_file" do
         ARGV.clear
