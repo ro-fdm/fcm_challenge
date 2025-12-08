@@ -104,6 +104,7 @@ $ BASED=SVQ bundle exec ruby main.rb ../spec/lack_info.txt
 ```
 
 Besides, I added some messages by typical errors for users, like forget the BASED environment, or the file, or use a file that is not a txt.  
+![Screenshot showing errors by console](https://github.com/ro-fdm/fcm_challenge/blob/master/error.png)
 
 ## Contributing
 
