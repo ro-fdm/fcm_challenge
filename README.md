@@ -12,6 +12,13 @@ $ BASED=SVQ bundle exec ruby main.rb input.txt
 or you can use docker:
 ```
 $ docker build fcm .
+```
+or
+```
+$ docker buildx build . -t fcm
+```
+and
+```
 $ docker run -it fcm /bin/bash
 root@number:/app# cd lib/
 root@number:/app/lib# BASED=SVQ bundle exec ruby main.rb input.txt
@@ -92,7 +99,9 @@ BASED=SVQ bundle exec ruby main.rb ../spec/empty_data.txt
 $ BASED=SVQ bundle exec ruby main.rb ../spec/error_data.txt
 ```
 
-- test_data.txt we have only part of the information of input.txt for simpler results for tests.  
+- test_data.txt we have only part of the information of input.txt for simpler results for tests.
+
+- lack_info.txt with a special case when we have two travels to the same place and not info about return in the first.
 
 Besides, I added some messages by typical errors for users, like forget the BASED environment, or the file, or use a file that is not a txt.  
 
