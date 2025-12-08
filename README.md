@@ -26,25 +26,21 @@ root@number:/app/lib# BASED=SVQ bundle exec ruby main.rb input.txt
 
 ## Development
 ### Gem
-I decide to create a gem because reading the instructions looks like a terminal task that it run with this command:
+I decided to create a gem because, after reading the instructions, it seems like a terminal task that it executed with this command:
 ```
 BASED=SVQ bundle exec ruby main.rb input.txt
 ```
-Besides this task has a simple input and output.
+Besides this task has a simple input and output, and don't need persistence.
 
 ### Object
-I decided to create a type of object, Segment, to save the information of every line with information.\
+I decided to create a type of object, Segment, to save the information of every line.\
 I identify two types of data, some are reservations for accomodations and other tickets for transport.\
-But I prefer to begin with a one type of object and if I needed in the future split to two, instead of create two different objects in this step.
+But I prefer to start with one type of object and, if in the future, I need in to split them into two, rather than creating two different objects in this step.
 
 ### Group the segments in travels
-I order the segments using the `departure_time`.\
-Once the segments are ordered we can know the initial step of every travel because the `from` field would be the city identify by IATA that was passed like the environment variable BASED.\
-To know the next steps for every travel I use a loop where I search the next step for:
-- the field `from` the next step should be the field `to` of the previous step.
-- the date of arrival of the next step should be later of the departure time of the previous step.
-
-I use a loop because I don't know the number of steps in the travel.  
+I order the segments using `departure_time`.\
+Once the segments are ordered, we can know the initial step of every travel because the `from` field would be the city identify by IATA that was passed like the environment variable BASED.\
+Because I have the steps ordered, I add every next segment until I arrive to the next initial step. \
 
 ### Calculate the destination
 We use the next logic:
@@ -57,14 +53,14 @@ connection and we use the city of destination of the second transport.
 
 
 ## Doubts
-1. I am using the number of words in the line to identify the data, then in normals conditions of work I would ask if we are sure about this.
+1. I am using the number of words on the line to identify the data, then under normal working conditions, I would ask if we are sure about this.
 Because if, for example, we have an hour to leave an accomodation, example:
 ```
 "SEGMENT: Resort MAD 2023-02-15 -> 2023-02-17 12:00"
 ```
 with the current code will raise an error.
 
-2. In the case of transport if in the middle of the travel we change the day, that is reflected in some way?
+2. In the case of transport: if in the middle of the travel we change the day, that is reflected in some way?
 For example:
 ```
 SEGMENT: Flight SVQ 2023-03-02 23:40 -> BCN 02:10
@@ -73,9 +69,10 @@ Because if this case would be completed with more information for example:
 ```
 SEGMENT: Flight SVQ 2023-03-02 23:40 -> BCN 2023-03-03 02:10
 ```
-Because with the current code will raise an error.
+With the current code will raise an error.
 
-3. When I calculate the destination, I am assuming that the travel have only one connection. If we have more than one connection the destination would not be show rightly.
+3. When calculating the destination, I assume the trip has only one connection. If there is more than one, the destination won't display correctly. 
+I can add a loop for several connections, but since these are business travels don't look likely.
 
 ## Test
 I have wrote several files for testing:  
@@ -102,12 +99,15 @@ $ BASED=SVQ bundle exec ruby main.rb ../spec/error_data.txt
 - test_data.txt we have only part of the information of input.txt for simpler results for tests.
 
 - lack_info.txt with a special case when we have two travels to the same place and not info about return in the first.
+```
+$ BASED=SVQ bundle exec ruby main.rb ../spec/lack_info.txt
+```
 
 Besides, I added some messages by typical errors for users, like forget the BASED environment, or the file, or use a file that is not a txt.  
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/fcm.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ro-fcm/fcm_challenge.
 
 ## License
 
