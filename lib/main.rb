@@ -44,12 +44,18 @@ module Fcm
       travel = [previous_step]
       segments.each do |next_step|
         break if next_step.from == based
-
-        travel << next_step
+        if check_step(previous_step, next_step)
+          travel << next_step
+          previous_step = next_step
+        end
       end
       segments -= travel
       write_travel(travel)
     end
+  end
+
+  def self.check_step(previous_step, next_step)
+    previous_step.to == next_step.from
   end
 
   def self.initial_segments(segments, based)
