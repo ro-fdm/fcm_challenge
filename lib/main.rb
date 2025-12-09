@@ -38,6 +38,7 @@ module Fcm
     segments.sort_by(&:departure_time)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def self.group_segments(segments, based)
     initial_segments(segments, based).each do |previous_step|
       segments.delete(previous_step)
@@ -45,11 +46,19 @@ module Fcm
       segments.each do |next_step|
         break if next_step.from == based
 
-        travel << next_step
+        if check_step?(previous_step, next_step)
+          travel << next_step
+          previous_step = next_step
+        end
       end
       segments -= travel
       write_travel(travel)
     end
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  def self.check_step?(previous_step, next_step)
+    previous_step.to == next_step.from
   end
 
   def self.initial_segments(segments, based)
