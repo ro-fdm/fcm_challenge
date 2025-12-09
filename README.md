@@ -41,6 +41,7 @@ But I prefer to start with one type of object and, if in the future, I need in t
 I order the segments using `departure_time`.\
 Once the segments are ordered, we can know the initial step of every travel because the `from` field would be the city identify by IATA that was passed like the environment variable BASED.\
 Because I have the steps ordered, I add every next segment until I arrive to the next initial step. \
+Besides I have a check_step? method where I confirmed that in this step the from is the same that the to of the previous step. 
 
 ### Calculate the destination
 We use the next logic:
